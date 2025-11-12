@@ -11,7 +11,7 @@ LOG.setLevel(logging.DEBUG)
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s"))
 LOG.addHandler(handler)
-
+print("MsfrpcTrigger logger initialized.")
 
 class MsfrpcTrigger:
     def __init__(self, rpc_password: str, rpc_user: str = "msf", rpc_host: str = "127.0.0.1",
