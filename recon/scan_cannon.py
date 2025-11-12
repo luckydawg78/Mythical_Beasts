@@ -4,7 +4,12 @@ from pathlib import Path
 from utils.logger import log
 
 
-def run_scan(target_file: str, scancannon_path: str = None, output_file: str = "scan_results.html") -> str | None:
+def run_scan(
+    target_file: str,
+    scancannon_path: str = None,
+    output_file: str = "scan_results.html",
+    auto_confirm_network: bool = True,
+) -> str | None:
     """Run ScanCannon against targets listed in `target_file`.
 
     - scancannon_path: optional path to the scancannon.sh script. If not provided,
@@ -30,8 +35,17 @@ def run_scan(target_file: str, scancannon_path: str = None, output_file: str = "
         cmd = [str(sc_path), "-i", target_file, "-o", output_file]
 
     try:
+        # Feed "y" to ScanCannon's optional NIC tuning prompt when requested.
+        stdin_data = "y\n" if auto_confirm_network else None
+
         # Capture output for better diagnostics
-        res = subprocess.run(cmd, check=False, capture_output=True, text=True)
+        res = subprocess.run(
+            cmd,
+            check=False,
+            capture_output=True,
+            text=True,
+            input=stdin_data,
+        )
         if res.returncode != 0:
             # Provide stderr/stdout to help diagnose failures (e.g., git errors inside ScanCannon)
             stderr = (res.stderr or "").strip()
