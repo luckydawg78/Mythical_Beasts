@@ -9,6 +9,7 @@ def run_scan(
     scancannon_path: str = None,
     output_file: str = "scan_results.html",
     auto_confirm_network: bool = True,
+    use_sudo: bool | None = None,
 ) -> str | None:
     """Run ScanCannon against targets listed in `target_file`.
 
@@ -33,6 +34,14 @@ def run_scan(
         cmd = ["sh", str(sc_path), target_file]
     else:
         cmd = [str(sc_path), target_file]
+
+    # Allow sudo elevation either via parameter or SCANCANNON_USE_SUDO env flag.
+    if use_sudo is None:
+        env_flag = os.environ.get("SCANCANNON_USE_SUDO", "").strip().lower()
+        use_sudo = env_flag in {"1", "true", "yes", "on"}
+    if use_sudo:
+        cmd = ["sudo"] + cmd
+        log("info", f"Executing ScanCannon with sudo: {' '.join(cmd)}")
 
     try:
         # Feed "y" to ScanCannon's optional NIC tuning prompt when requested.
