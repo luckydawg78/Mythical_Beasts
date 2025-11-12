@@ -1,6 +1,6 @@
 import json;
 from recon.scan_cannon import run_scan
-from recon.parser import parse_scan_results
+from recon.parser import parse_html
 from attack.hydra_attack import brute_force
 from attack.metasploit_trigger import exploit_targets
 from utils.logger import log
