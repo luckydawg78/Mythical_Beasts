@@ -20,7 +20,7 @@ def run_scan(
     log(f"Running scan on targets listed in {target_file}")
 
     # Resolve scan cannon path: parameter -> env -> default
-    sc = scancannon_path or os.environ.get("SCANCANNON_PATH") or "scancannon.sh"
+    sc = scancannon_path or os.environ.get("SCANCANNON_PATH") or "/home/vmuser/Desktop/ScanCannon/scancannon.sh"
     sc_path = Path(sc)
 
     if not sc_path.exists():
