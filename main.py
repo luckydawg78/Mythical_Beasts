@@ -7,9 +7,20 @@ from utils.logger import log
 
 def main():
     log("Starting Automated Red Team")
-    # Run an initial scan (assumes run_scan returns a list of target dicts)
-    targets = run_scan("targets.txt")
+    # Run scancannon via recon.scan_cannon.run_scan which returns an output HTML file
+    scan_output = run_scan("targets.txt")
     log("Scan completed. Parsing results.")
+
+    # parse scan output into structured targets
+    targets = []
+    if scan_output:
+        try:
+            targets = parse_html(scan_output)
+        except Exception as e:
+            log(f"Failed to parse scan output {scan_output}: {e}")
+            targets = []
+    else:
+        log("No scan output produced; skipping parsing and attack steps.")
 
     # Create a Metasploit RPC trigger helper. Use dry_run=True by default to avoid
     # requiring an actual msfrpcd connection while developing. Replace rpc_password
