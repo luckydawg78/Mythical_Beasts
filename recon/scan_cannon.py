@@ -10,12 +10,17 @@ def run_scan(
     output_file: str = "scan_results.html",
     auto_confirm_network: bool = True,
     use_sudo: bool | None = None,
+    results_dir_choice: str | None = "D",
 ) -> str | None:
     """Run ScanCannon against targets listed in `target_file`.
 
     - scancannon_path: optional path to the scancannon.sh script. If not provided,
       the function will try SCANCANNON_PATH environment variable, then a sensible
       default used in development images.
+    - auto_confirm_network: if True, automatically answer "y" to the NIC prompt.
+    - results_dir_choice: automatically choose how ScanCannon handles an existing
+      results directory (e.g., "D" to delete, "M" to merge). Overrides can be set
+      via the SCANCANNON_RESULTS_CHOICE environment variable.
     - Returns path to generated output_file on success, or None on failure.
     """
     log(f"Running scan on targets listed in {target_file}")
@@ -44,8 +49,18 @@ def run_scan(
         log("info", f"Executing ScanCannon with sudo: {' '.join(cmd)}")
 
     try:
-        # Feed "y" to ScanCannon's optional NIC tuning prompt when requested.
-        stdin_data = "y\n" if auto_confirm_network else None
+        # Build scripted answers for ScanCannon prompts (NIC config + results folder action).
+        answers: list[str] = []
+        if auto_confirm_network:
+            answers.append("y\n")
+
+        # Allow overriding the results-folder prompt via env var or argument.
+        env_choice = os.environ.get("SCANCANNON_RESULTS_CHOICE")
+        effective_choice = env_choice.strip().upper() if env_choice else (results_dir_choice or "").upper()
+        if effective_choice:
+            answers.append(f"{effective_choice}\n")
+
+        stdin_data = "".join(answers) if answers else None
 
         # Capture output for better diagnostics
         res = subprocess.run(
