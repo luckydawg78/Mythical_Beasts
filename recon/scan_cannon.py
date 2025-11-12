@@ -30,9 +30,9 @@ def run_scan(
     # If the script isn't executable, try to run it via sh
     if not os.access(sc_path, os.X_OK):
         log("warning", f"ScanCannon at {sc_path} is not executable. Attempting to invoke with sh.")
-        cmd = ["sh", str(sc_path), "-i", target_file, "-o", output_file]
+        cmd = ["sh", str(sc_path), target_file]
     else:
-        cmd = [str(sc_path), "-i", target_file, "-o", output_file]
+        cmd = [str(sc_path), target_file]
 
     try:
         # Feed "y" to ScanCannon's optional NIC tuning prompt when requested.
