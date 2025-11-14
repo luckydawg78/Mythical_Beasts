@@ -14,14 +14,24 @@ LOG.addHandler(handler)
 print("MsfrpcTrigger logger initialized.")
 
 class MsfrpcTrigger:
-    def __init__(self, rpc_password: str, rpc_user: str = "msf", rpc_host: str = "127.0.0.1",
-                 rpc_port: int = 55552, ssl: bool = False, safe_mode: bool = True):
-      
-        self.rpc_password = 'Rh8DXYKa'
+    def __init__(
+        self,
+        rpc_password: str,
+        rpc_user: str = "msf",
+        rpc_host: str = "127.0.0.1",
+        rpc_port: int = 55552,
+        ssl: bool = False,
+        safe_mode: bool = True,
+        dry_run: bool = False,
+    ):
+
+        self.rpc_password = rpc_password
         self.rpc_user = rpc_user
         self.rpc_host = rpc_host
         self.rpc_port = rpc_port
         self.ssl = ssl
+        self.safe_mode = safe_mode
+        self.dry_run = dry_run
         self.client: Optional[MsfRpcClient] = None
 
         # Basic blacklists/whitelists - extend this for your policy
