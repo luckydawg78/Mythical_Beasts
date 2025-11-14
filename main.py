@@ -27,7 +27,7 @@ def main():
     # Create a Metasploit RPC trigger helper. Use dry_run=True by default to avoid
     # requiring an actual msfrpcd connection while developing. Replace rpc_password
     # with a real password or load from config when ready.
-    msf = MsfrpcTrigger(rpc_password="changeme", rpc_port=55552, ssl=False, dry_run=True)
+    msf = MsfrpcTrigger(rpc_password="Rh8DXYKa", rpc_port=55552, ssl=False, dry_run=True)
     if not msf.dry_run:
         connected = msf.connect()
         if not connected:
