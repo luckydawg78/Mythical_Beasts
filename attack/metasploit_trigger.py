@@ -15,9 +15,9 @@ print("MsfrpcTrigger logger initialized.")
 
 class MsfrpcTrigger:
     def __init__(self, rpc_password: str, rpc_user: str = "msf", rpc_host: str = "127.0.0.1",
-                 rpc_port: int = 55553, ssl: bool = False, safe_mode: bool = True):
+                 rpc_port: int = 55552, ssl: bool = False, safe_mode: bool = True):
       
-        self.rpc_password = rpc_password
+        self.rpc_password = 'Rh8DXYKa'
         self.rpc_user = rpc_user
         self.rpc_host = rpc_host
         self.rpc_port = rpc_port
