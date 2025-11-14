@@ -12,17 +12,6 @@ def run_scan(
     use_sudo: bool | None = None,
     results_dir_choice: str | None = "D",
 ) -> str | None:
-    """Run ScanCannon against targets listed in `target_file`.
-
-    - scancannon_path: optional path to the scancannon.sh script. If not provided,
-      the function will try SCANCANNON_PATH environment variable, then a sensible
-      default used in development images.
-    - auto_confirm_network: if True, automatically answer "y" to the NIC prompt.
-    - results_dir_choice: automatically choose how ScanCannon handles an existing
-      results directory (e.g., "D" to delete, "M" to merge). Overrides can be set
-      via the SCANCANNON_RESULTS_CHOICE environment variable.
-    - Returns path to generated output_file on success, or None on failure.
-    """
     log(f"Running scan on targets listed in {target_file}")
 
     # Resolve scan cannon path: parameter -> env -> default

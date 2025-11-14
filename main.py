@@ -1,6 +1,5 @@
-import json
 from recon.scan_cannon import run_scan
-from recon.parser import parse_html
+from recon.parser import parse_scancannon_results
 from attack.hydra_attack import brute_force
 from attack.metasploit_trigger import MsfrpcTrigger
 from utils.logger import log
@@ -15,12 +14,15 @@ def main():
     targets = []
     if scan_output:
         try:
-            targets = parse_html(scan_output)
+            targets = parse_scancannon_results(scan_output)
         except Exception as e:
-            log(f"Failed to parse scan output {scan_output}: {e}")
+            log("error", f"Failed to parse scan results using {scan_output}: {e}")
             targets = []
     else:
-        log("No scan output produced; skipping parsing and attack steps.")
+        log("warning", "No scan output produced; skipping parsing and attack steps.")
+
+    if not targets:
+        log("warning", "No targets extracted from ScanCannon results.")
 
     # Create a Metasploit RPC trigger helper. Use dry_run=True by default to avoid
     # requiring an actual msfrpcd connection while developing. Replace rpc_password
@@ -50,7 +52,6 @@ def main():
                 log("No host information for target; skipping http exploit")
 
     log("Automated Red Team operations completed.")
-    log("workflow finished")
 
 if __name__ == "__main__":
     main()

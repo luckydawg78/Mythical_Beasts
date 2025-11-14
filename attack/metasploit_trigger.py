@@ -15,23 +15,13 @@ print("MsfrpcTrigger logger initialized.")
 
 class MsfrpcTrigger:
     def __init__(self, rpc_password: str, rpc_user: str = "msf", rpc_host: str = "127.0.0.1",
-                 rpc_port: int = 55553, ssl: bool = False, safe_mode: bool = True, dry_run: bool = False):
-        """
-        rpc_password: password for msfrpcd
-        rpc_user: user (commonly 'msf')
-        rpc_host: host where msfrpcd is listening
-        rpc_port: msfrpcd port (default for msfrpcd is typically 55553 when SSL; adjust accordingly)
-        ssl: if msfrpcd was started with SSL
-        safe_mode: disallow blacklisted/destructive choices
-        dry_run: do not actually execute exploit, only return plan and checks
-        """
+                 rpc_port: int = 55553, ssl: bool = False, safe_mode: bool = True):
+      
         self.rpc_password = rpc_password
         self.rpc_user = rpc_user
         self.rpc_host = rpc_host
         self.rpc_port = rpc_port
         self.ssl = ssl
-        self.safe_mode = safe_mode
-        self.dry_run = dry_run
         self.client: Optional[MsfRpcClient] = None
 
         # Basic blacklists/whitelists - extend this for your policy
@@ -49,7 +39,6 @@ class MsfrpcTrigger:
         ]
 
     def connect(self, timeout: int = 30) -> bool:
-        """Connect to msfrpcd server. Returns True if connected."""
         try:
             LOG.info("Connecting to msfrpcd at %s:%s", self.rpc_host, self.rpc_port)
             self.client = MsfRpcClient(self.rpc_password, ssl=self.ssl, server=self.rpc_host, port=self.rpc_port)
@@ -60,10 +49,7 @@ class MsfrpcTrigger:
             return False
 
     def search_modules(self, query: str, mod_type: str = "exploit") -> List[Dict]:
-        """
-        Search modules by text (e.g., service name, product name, CVE, etc.).
-        Returns list of module dicts from pymetasploit3 search response.
-        """
+      
         assert self.client is not None, "Not connected"
         LOG.debug("Searching for modules with query=%s type=%s", query, mod_type)
         try:
